@@ -76,33 +76,6 @@ func main() {
 		c.JSON(http.StatusCreated, gin.H{"bytes_added": len(dHash)})
 	})
 
-	// // Basic GET endpoint
-	// router.GET("/ping", func(c *gin.Context) {
-	// 	c.JSON(http.StatusOK, gin.H{
-	// 		"message": "pong",
-	// 	})
-	// })
-
-	// // GET endpoint with a URL path parameter
-	// router.GET("/hello/:name", func(c *gin.Context) {
-	// 	name := c.Param("name")
-	// 	c.JSON(http.StatusOK, gin.H{
-	// 		"greeting": "Hello, " + name + "!",
-	// 	})
-	// })
-
-	// // POST endpoint that binds and validates incoming JSON
-	// router.POST("/items", func(c *gin.Context) {
-	// 	var newItem Item
-
-	// 	if err := c.ShouldBindJSON(&newItem); err != nil {
-	// 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-	// 		return
-	// 	}
-
-	// 	c.JSON(http.StatusCreated, newItem)
-	// })
-
 	// Start the server on port 8080 (default)
 	router.Run(":8080")
 }
