@@ -10,6 +10,7 @@ import (
 
 func main() {
 
+	// Create the entropy pool
 	pool := NewRingBuffer(4096)
 
 	// Initialize a Gin router with default Logger and Recovery middleware

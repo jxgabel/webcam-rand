@@ -1,4 +1,4 @@
-module api
+module webcam-rand/api
 
 go 1.27.4
 
