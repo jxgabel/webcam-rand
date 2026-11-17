@@ -1,2 +1,0 @@
-# FastClient: keep local secrets out of git
-environments/*.local.json
