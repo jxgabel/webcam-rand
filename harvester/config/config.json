@@ -1,0 +1,8 @@
+{
+  "app_name": "webcam-rand",
+  "api": "http://localhost:8888",
+  "sources": [
+    "/dev/video0"
+  ],
+  "capture_interval_milliseconds": 500
+}

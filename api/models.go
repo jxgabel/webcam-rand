@@ -11,6 +11,8 @@ type ImageHash struct {
 type RandomNumber struct {
 	Number        uint32 `json:"number"`
 	HexValue      string `json:"hex"`
+	Min           int    `json:"min"`
+	Max           int    `json:"max"`
 	PoolRemaining int    `json:"pool_remaining"`
 }
 
