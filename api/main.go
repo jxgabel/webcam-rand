@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/binary"
 	"encoding/hex"
+	"fmt"
 	"math"
 	"net/http"
 	"strconv"
@@ -13,6 +14,25 @@ import (
 const DefaultMin = 0
 const MaxAllowedLimit = 1000000
 
+func corsMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		// Replace "*" with your exact frontend origin (e.g., "http://localhost:8080") in production
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:8080")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+
+		// Explicitly allow HTMX's custom headers so browser preflight checks pass
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, HX-Request, HX-Trigger, HX-Trigger-Name, HX-Target, HX-Current-URL, HX-Boosted, HX-History-Restore-Request, HX-Prompt")
+
+		// Intercept browser OPTIONS preflight requests and return 200 OK immediately
+		if c.Request.Method == http.MethodOptions {
+			c.AbortWithStatus(http.StatusOK)
+			return
+		}
+
+		c.Next()
+	}
+}
+
 func main() {
 
 	// Create the entropy pool
@@ -20,34 +40,27 @@ func main() {
 
 	// Initialize a Gin router with default Logger and Recovery middleware
 	router := gin.Default()
+	router.Use(corsMiddleware())
 
 	// GET random from the entropy pool
 	router.GET("/random", func(c *gin.Context) {
 
-		minStr := c.DefaultQuery("min", strconv.Itoa(DefaultMin))
+		minStr := c.Query("min")
 		min, err := strconv.Atoi(minStr)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-		if min < DefaultMin {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "min must be 0 or greater"})
+		if err != nil || min < DefaultMin {
+			c.JSON(http.StatusOK, gin.H{"error": fmt.Sprintf("min must be %d or greater", DefaultMin)})
 			return
 		}
 
-		maxStr := c.DefaultQuery("max", strconv.Itoa(MaxAllowedLimit))
+		maxStr := c.Query("max")
 		max, err := strconv.Atoi(maxStr)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-		if max > MaxAllowedLimit {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "max must be 1000000 or less"})
+		if err != nil || max > MaxAllowedLimit {
+			c.JSON(http.StatusOK, gin.H{"error": fmt.Sprintf("max must be %d or less", MaxAllowedLimit)})
 			return
 		}
 
 		if min >= max {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "min must be lower than max"})
+			c.JSON(http.StatusOK, gin.H{"error": "min must be lower than max"})
 			return
 		}
 

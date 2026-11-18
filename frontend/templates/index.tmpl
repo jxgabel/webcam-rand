@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ .Title }}</title>
+    <meta charset="UTF-8">
+    <title>HTMX Cross-Origin</title>
+    <!-- Configure HTMX before it loads -->
+    <meta name="htmx-config" content='{"selfRequestsOnly": false}'>
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    <style>
+      #body {
+        font-family:arial;
+      }
+    </style>
+</head>
+<body id="body">
+
+  <div style="width:90%;margin:0 auto;">
+
+    <h1>{{ .Heading }}</h1>
+
+    This is a learning project inspired by the <a href="https://www.cloudflare.com/learning/ssl/lava-lamp-encryption/">Cloudflare lava lamp wall of entropy</a>.  
+    Using one or more webcams, this project is able to generate real world random number rather than using regular
+    random type programming libraries which aren't truly random.  The point of this project was to learn how to take real
+    world entropy and distill it down into a random number.
+    <br/><br/>
+
+    <div id="filter-group">
+        <input name="min" type="number" value="0" /><br/><br/>
+        <input name="max" type="number" value="1000000" /><br/>
+    </div>
+    <br/>
+
+    <button hx-get="http://localhost:8888/random" hx-target="#details" hx-include="#filter-group">
+      Get a Random Number
+    </button>
+    <br/><br/>
+
+    <div id="details">
+    </div>
+
+  </div>
+
+</body>
+</html>
